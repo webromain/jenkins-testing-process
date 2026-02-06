@@ -1,0 +1,24 @@
+pipeline {
+    agent {
+        docker {
+            image "python:3.14"
+        }
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                git branch: 'main',
+                    url: 'https://codeberg.org/argonaultes-education/epsi-paris-b3-tese519-webapp.git'
+
+                sh '''
+                    python -m venv .venv
+                    . .venv/bin/activate
+                    pip install --upgrade pip
+                    pip install Flask
+                    python -m unittest nobrowserwebapp_test.py
+                '''
+            }
+        }
+    }
+}
